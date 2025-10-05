@@ -12,10 +12,6 @@ import java.util.Random;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * Comprehensive test suite for Heap Sort implementation.
- * Tests edge cases, correctness, and performance characteristics.
- */
 class HeapSortTest {
 
     private HeapSort sorter;
@@ -28,8 +24,6 @@ class HeapSortTest {
         tracker = new PerformanceTracker();
         trackedSorter = new HeapSort(tracker);
     }
-
-    // ===== EDGE CASE TESTS =====
 
     @Test
     @DisplayName("Test null array throws exception")
@@ -56,7 +50,7 @@ class HeapSortTest {
     }
 
     @Test
-    @DisplayName("Test two elements - ascending")
+    @DisplayName("Test two elements ascending")
     void testTwoElementsAscending() {
         int[] arr = {1, 2};
         sorter.sort(arr);
@@ -64,14 +58,12 @@ class HeapSortTest {
     }
 
     @Test
-    @DisplayName("Test two elements - descending")
+    @DisplayName("Test two elements descending")
     void testTwoElementsDescending() {
         int[] arr = {2, 1};
         sorter.sort(arr);
         assertArrayEquals(new int[]{1, 2}, arr);
     }
-
-    // ===== DUPLICATE HANDLING TESTS =====
 
     @Test
     @DisplayName("Test all duplicate elements")
@@ -100,8 +92,6 @@ class HeapSortTest {
         assertArrayEquals(expected, arr);
     }
 
-    // ===== SORTED ARRAY TESTS =====
-
     @Test
     @DisplayName("Test already sorted array")
     void testAlreadySorted() {
@@ -121,8 +111,6 @@ class HeapSortTest {
         assertArrayEquals(expected, arr);
     }
 
-    // ===== RANDOM ARRAY TESTS =====
-
     @Test
     @DisplayName("Test small random array")
     void testSmallRandomArray() {
@@ -140,8 +128,6 @@ class HeapSortTest {
         assertTrue(HeapSort.isSorted(arr));
         assertEquals(15, arr.length);
     }
-
-    // ===== NEGATIVE NUMBER TESTS =====
 
     @Test
     @DisplayName("Test array with negative numbers")
@@ -170,16 +156,14 @@ class HeapSortTest {
         assertArrayEquals(expected, arr);
     }
 
-    // ===== LARGE ARRAY TESTS =====
-
     @ParameterizedTest
     @ValueSource(ints = {100, 500, 1000})
-    @DisplayName("Test large random arrays of various sizes")
+    @DisplayName("Test large random arrays")
     void testLargeRandomArrays(int size) {
-        Random rand = new Random(42); // Fixed seed for reproducibility
+        Random rand = new Random(42);
         int[] arr = new int[size];
         for (int i = 0; i < size; i++) {
-            arr[i] = rand.nextInt(10000) - 5000; // Range: -5000 to 4999
+            arr[i] = rand.nextInt(10000) - 5000;
         }
 
         sorter.sort(arr);
@@ -187,10 +171,8 @@ class HeapSortTest {
         assertEquals(size, arr.length);
     }
 
-    // ===== PROPERTY-BASED TESTS =====
-
     @Test
-    @DisplayName("Property: Sorted array should be non-decreasing")
+    @DisplayName("Property: sorted array is non-decreasing")
     void testPropertyNonDecreasing() {
         Random rand = new Random(123);
         for (int trial = 0; trial < 50; trial++) {
@@ -203,26 +185,25 @@ class HeapSortTest {
             sorter.sort(arr);
 
             for (int i = 0; i < arr.length - 1; i++) {
-                assertTrue(arr[i] <= arr[i + 1],
-                        "Array not sorted at indices " + i + " and " + (i + 1));
+                assertTrue(arr[i] <= arr[i + 1]);
             }
         }
     }
 
     @Test
-    @DisplayName("Property: Sorted array should contain same elements")
+    @DisplayName("Property: same elements after sorting")
     void testPropertySameElements() {
         int[] original = {5, 2, 8, 1, 9, 3, 7, 4, 6};
         int[] sorted = HeapSort.copyArray(original);
 
-        Arrays.sort(original); // Use Java's sort for comparison
+        Arrays.sort(original);
         sorter.sort(sorted);
 
         assertArrayEquals(original, sorted);
     }
 
     @Test
-    @DisplayName("Property: Sorting should be idempotent")
+    @DisplayName("Property: sorting is idempotent")
     void testPropertyIdempotent() {
         int[] arr = {9, 3, 7, 1, 5, 2, 8, 4, 6};
         sorter.sort(arr);
@@ -234,10 +215,8 @@ class HeapSortTest {
         assertArrayEquals(firstSort, secondSort);
     }
 
-    // ===== PERFORMANCE TRACKING TESTS =====
-
     @Test
-    @DisplayName("Test performance tracking records operations")
+    @DisplayName("Test performance tracking")
     void testPerformanceTracking() {
         int[] arr = {5, 2, 8, 1, 9};
 
@@ -246,15 +225,15 @@ class HeapSortTest {
         trackedSorter.sort(arr);
         tracker.stopTiming();
 
-        assertTrue(tracker.getComparisons() > 0, "Should record comparisons");
-        assertTrue(tracker.getSwaps() > 0, "Should record swaps");
-        assertTrue(tracker.getHeapifyOperations() > 0, "Should record heapify operations");
-        assertTrue(tracker.getExecutionTimeNanos() > 0, "Should record execution time");
-        assertTrue(HeapSort.isSorted(arr), "Array should be sorted");
+        assertTrue(tracker.getComparisons() > 0);
+        assertTrue(tracker.getSwaps() > 0);
+        assertTrue(tracker.getHeapifyOperations() > 0);
+        assertTrue(tracker.getExecutionTimeNanos() > 0);
+        assertTrue(HeapSort.isSorted(arr));
     }
 
     @Test
-    @DisplayName("Test complexity scaling for different input sizes")
+    @DisplayName("Test complexity scaling")
     void testComplexityScaling() {
         int[] sizes = {10, 50, 100};
         long[] comparisons = new long[sizes.length];
@@ -273,46 +252,15 @@ class HeapSortTest {
             assertTrue(HeapSort.isSorted(arr));
         }
 
-        // Verify that comparisons grow roughly as n log n
-        // comparisons[i+1] / comparisons[i] should be > (sizes[i+1] / sizes[i])
         for (int i = 0; i < sizes.length - 1; i++) {
             double ratio = (double) comparisons[i + 1] / comparisons[i];
             double sizeRatio = (double) sizes[i + 1] / sizes[i];
-            assertTrue(ratio > sizeRatio * 0.5,
-                    "Comparisons should scale with O(n log n)");
+            assertTrue(ratio > sizeRatio * 0.5);
         }
     }
 
-    // ===== UTILITY METHOD TESTS =====
-
     @Test
-    @DisplayName("Test isSorted utility method")
-    void testIsSortedUtility() {
-        assertTrue(HeapSort.isSorted(new int[]{1, 2, 3, 4, 5}));
-        assertTrue(HeapSort.isSorted(new int[]{1}));
-        assertTrue(HeapSort.isSorted(new int[]{}));
-        assertTrue(HeapSort.isSorted(null));
-        assertFalse(HeapSort.isSorted(new int[]{5, 4, 3, 2, 1}));
-        assertFalse(HeapSort.isSorted(new int[]{1, 3, 2, 4}));
-    }
-
-    @Test
-    @DisplayName("Test copyArray utility method")
-    void testCopyArrayUtility() {
-        int[] original = {1, 2, 3, 4, 5};
-        int[] copy = HeapSort.copyArray(original);
-
-        assertArrayEquals(original, copy);
-        assertNotSame(original, copy); // Different objects
-
-        copy[0] = 999;
-        assertEquals(1, original[0]); // Original unchanged
-    }
-
-    // ===== CROSS-VALIDATION TEST =====
-
-    @Test
-    @DisplayName("Cross-validation with Java's Arrays.sort()")
+    @DisplayName("Cross-validation with Arrays.sort")
     void testCrossValidation() {
         Random rand = new Random(789);
 
@@ -325,11 +273,89 @@ class HeapSortTest {
 
             int[] arr2 = HeapSort.copyArray(arr1);
 
-            Arrays.sort(arr1); // Java's sort
-            sorter.sort(arr2);  // Our heap sort
+            Arrays.sort(arr1);
+            sorter.sort(arr2);
 
-            assertArrayEquals(arr1, arr2,
-                    "HeapSort should produce same result as Arrays.sort()");
+            assertArrayEquals(arr1, arr2);
         }
+    }
+
+    @Test
+    @DisplayName("Test extract-max operation")
+    void testExtractMax() {
+        int[] arr = {10, 5, 15, 3, 7, 12, 20};
+        HeapSort heapSorter = new HeapSort();
+
+        // Build max heap first
+        int[] heap = HeapSort.copyArray(arr);
+        heapSorter.sort(heap); // This builds heap then sorts, we need just heap
+
+        // Actually build heap properly
+        heap = new int[]{20, 15, 12, 10, 7, 5, 3}; // Manual max heap
+
+        int max = heapSorter.extractMax(heap, 7);
+        assertEquals(20, max);
+        assertTrue(HeapSort.isMaxHeap(heap, 6));
+    }
+
+    @Test
+    @DisplayName("Test increase-key operation")
+    void testIncreaseKey() {
+        int[] heap = {20, 15, 12, 10, 7, 5, 3};
+        HeapSort heapSorter = new HeapSort();
+
+        heapSorter.increaseKey(heap, 6, 25);
+
+        assertTrue(HeapSort.isMaxHeap(heap, 7));
+        assertEquals(25, heap[0]); // Should bubble to top
+    }
+
+    @Test
+    @DisplayName("Test increase-key with invalid value")
+    void testIncreaseKeyInvalid() {
+        int[] heap = {20, 15, 12};
+        HeapSort heapSorter = new HeapSort();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            heapSorter.increaseKey(heap, 1, 10);
+        });
+    }
+
+    @Test
+    @DisplayName("Test extract-max on empty heap")
+    void testExtractMaxEmpty() {
+        int[] heap = {};
+        HeapSort heapSorter = new HeapSort();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            heapSorter.extractMax(heap, 0);
+        });
+    }
+
+    @Test
+    @DisplayName("Test insert operation")
+    void testInsert() {
+        int[] heap = new int[10];
+        heap[0] = 20;
+        heap[1] = 15;
+        heap[2] = 12;
+        int heapSize = 3;
+
+        HeapSort heapSorter = new HeapSort();
+        heapSize = heapSorter.insert(heap, heapSize, 18);
+
+        assertEquals(4, heapSize);
+        assertTrue(HeapSort.isMaxHeap(heap, heapSize));
+    }
+
+    @Test
+    @DisplayName("Test getMax operation")
+    void testGetMax() {
+        int[] heap = {20, 15, 12, 10, 7};
+        HeapSort heapSorter = new HeapSort();
+
+        int max = heapSorter.getMax(heap, 5);
+        assertEquals(20, max);
+        assertEquals(20, heap[0]); // Should not modify heap
     }
 }

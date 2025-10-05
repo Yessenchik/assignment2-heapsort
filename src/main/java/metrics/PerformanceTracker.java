@@ -9,33 +9,20 @@ import java.util.List;
 /**
  * Tracks performance metrics for algorithm analysis including comparisons,
  * swaps, array accesses, and execution time.
- *
- * This class provides detailed metrics collection for empirical validation
- * of theoretical complexity analysis.
  */
 public class PerformanceTracker {
 
-    // Core operation counters
     private long comparisons;
     private long swaps;
     private long arrayReads;
     private long arrayWrites;
     private long heapifyOperations;
-
-    // Memory tracking
     private long peakMemoryUsage;
     private long initialMemory;
-
-    // Timing
     private long startTime;
     private long endTime;
-
-    // Data collection for multiple runs
     private final List<RunMetrics> runHistory;
 
-    /**
-     * Container for metrics from a single algorithm run
-     */
     public static class RunMetrics {
         public final int inputSize;
         public final long comparisons;
@@ -71,9 +58,6 @@ public class PerformanceTracker {
         reset();
     }
 
-    /**
-     * Reset all counters for a new measurement
-     */
     public void reset() {
         comparisons = 0;
         swaps = 0;
@@ -85,14 +69,11 @@ public class PerformanceTracker {
         endTime = 0;
     }
 
-    /**
-     * Start timing measurement
-     */
     public void startTiming() {
         Runtime runtime = Runtime.getRuntime();
-        runtime.gc(); // Suggest garbage collection for cleaner memory measurement
+        runtime.gc();
         try {
-            Thread.sleep(50); // Give GC time to run
+            Thread.sleep(50);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
@@ -100,9 +81,6 @@ public class PerformanceTracker {
         startTime = System.nanoTime();
     }
 
-    /**
-     * Stop timing measurement
-     */
     public void stopTiming() {
         endTime = System.nanoTime();
         Runtime runtime = Runtime.getRuntime();
@@ -110,53 +88,32 @@ public class PerformanceTracker {
         peakMemoryUsage = Math.max(peakMemoryUsage, currentMemory - initialMemory);
     }
 
-    /**
-     * Record a comparison operation
-     */
     public void recordComparison() {
         comparisons++;
     }
 
-    /**
-     * Record multiple comparisons at once
-     */
     public void recordComparisons(int count) {
         comparisons += count;
     }
 
-    /**
-     * Record a swap operation (counts as 2 writes + 2 reads)
-     */
     public void recordSwap() {
         swaps++;
         arrayReads += 2;
         arrayWrites += 2;
     }
 
-    /**
-     * Record an array read operation
-     */
     public void recordArrayRead() {
         arrayReads++;
     }
 
-    /**
-     * Record an array write operation
-     */
     public void recordArrayWrite() {
         arrayWrites++;
     }
 
-    /**
-     * Record a heapify operation
-     */
     public void recordHeapify() {
         heapifyOperations++;
     }
 
-    /**
-     * Save current metrics to run history
-     */
     public void saveRun(int inputSize, String inputType) {
         long totalArrayAccesses = arrayReads + arrayWrites;
         long executionTime = endTime - startTime;
@@ -169,16 +126,11 @@ public class PerformanceTracker {
         runHistory.add(metrics);
     }
 
-    /**
-     * Export all run metrics to CSV file
-     */
     public void exportToCSV(String filename) throws IOException {
         try (PrintWriter writer = new PrintWriter(new FileWriter(filename))) {
-            // CSV Header
             writer.println("InputSize,InputType,Comparisons,Swaps,ArrayAccesses," +
                     "HeapifyOps,TimeNanos,TimeMillis,MemoryBytes,MemoryKB");
 
-            // Data rows
             for (RunMetrics run : runHistory) {
                 writer.printf("%d,%s,%d,%d,%d,%d,%d,%.3f,%d,%d%n",
                         run.inputSize,
@@ -196,9 +148,6 @@ public class PerformanceTracker {
         }
     }
 
-    /**
-     * Print current metrics to console
-     */
     public void printMetrics() {
         System.out.println("=== Performance Metrics ===");
         System.out.println("Comparisons:      " + comparisons);
@@ -211,9 +160,6 @@ public class PerformanceTracker {
         System.out.println("=========================");
     }
 
-    /**
-     * Print summary of all runs
-     */
     public void printRunHistory() {
         System.out.println("\n=== Run History ===");
         for (int i = 0; i < runHistory.size(); i++) {
@@ -222,7 +168,6 @@ public class PerformanceTracker {
         System.out.println("==================\n");
     }
 
-    // Getters
     public long getComparisons() { return comparisons; }
     public long getSwaps() { return swaps; }
     public long getArrayReads() { return arrayReads; }

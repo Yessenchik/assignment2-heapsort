@@ -3,51 +3,42 @@ package algorithms;
 import metrics.PerformanceTracker;
 
 /**
- * In-place Heap Sort implementation with bottom-up heapify optimization.
- *
- * ALGORITHM OVERVIEW:
- * Heap Sort is a comparison-based sorting algorithm that uses a binary heap data structure.
- * It works in two phases:
- * 1. Build Max-Heap: Transform the input array into a max-heap using bottom-up heapify
- * 2. Extract Maximum: Repeatedly extract the maximum element and maintain heap property
+ * Max-Heap implementation with increase-key and extract-max operations.
+ * Supports both heap operations and in-place heap sort.
  *
  * COMPLEXITY ANALYSIS:
- * - Time Complexity: Θ(n log n) for all cases (best, average, worst)
- * - Space Complexity: Θ(1) - sorts in-place with only O(1) auxiliary space
- *
- * OPTIMIZATIONS IMPLEMENTED:
- * - Bottom-up heapify: More efficient heap construction in O(n) instead of O(n log n)
- * - In-place sorting: No additional arrays needed
- * - Iterative implementation: Avoids recursive call overhead for heapify
+ * - Build Heap: Θ(n) using bottom-up heapify
+ * - Extract-Max: Θ(log n)
+ * - Increase-Key: Θ(log n)
+ * - Heap Sort: Θ(n log n) for all cases
+ * - Space: Θ(1) auxiliary space
  *
  * @author Student B, Pair 2
- * @version 1.0
  */
 public class HeapSort {
 
     private final PerformanceTracker tracker;
     private final boolean enableTracking;
 
-    /**
-     * Constructor with performance tracking enabled
-     */
     public HeapSort(PerformanceTracker tracker) {
         this.tracker = tracker;
         this.enableTracking = (tracker != null);
     }
 
-    /**
-     * Constructor without performance tracking
-     */
     public HeapSort() {
         this.tracker = null;
         this.enableTracking = false;
     }
 
     /**
-     * Sort an integer array in ascending order using Heap Sort algorithm.
+     * Sort array in ascending order using heap sort algorithm.
      *
-     * @param arr the array to be sorted (modified in-place)
+     * TIME COMPLEXITY:
+     * - Best/Average/Worst: Θ(n log n)
+     *
+     * SPACE COMPLEXITY: Θ(1)
+     *
+     * @param arr array to sort (modified in-place)
      * @throws IllegalArgumentException if array is null
      */
     public void sort(int[] arr) {
@@ -56,115 +47,201 @@ public class HeapSort {
         }
 
         if (arr.length <= 1) {
-            return; // Already sorted
+            return;
         }
 
         int n = arr.length;
 
-        // Phase 1: Build Max-Heap using bottom-up approach
-        // Start from the last non-leaf node and heapify all nodes bottom-up
-        // Last non-leaf node is at index (n/2 - 1)
+        // Phase 1: Build max-heap using bottom-up approach O(n)
         buildMaxHeap(arr, n);
 
-        // Phase 2: Extract elements from heap one by one
-        // Move current root (maximum) to end, reduce heap size, and heapify
+        // Phase 2: Extract elements from heap O(n log n)
         for (int i = n - 1; i > 0; i--) {
-            // Move current root to end (largest element to its final position)
             swap(arr, 0, i);
-
-            // Heapify the reduced heap (exclude the sorted portion)
             heapifyDown(arr, i, 0);
         }
     }
 
     /**
-     * Build a max-heap from an unsorted array using bottom-up approach.
+     * Build max-heap from unsorted array using bottom-up approach.
      *
-     * OPTIMIZATION: Bottom-up heap construction is more efficient than
-     * inserting elements one by one. It runs in O(n) time instead of O(n log n).
+     * TIME: O(n) - more efficient than top-down O(n log n)
+     * PROOF: Σ(h=0 to log n) [n/2^(h+1)] * h = O(n)
      *
-     * MATHEMATICAL PROOF OF O(n) COMPLEXITY:
-     * - Height of heap = log n
-     * - Nodes at height h: n / 2^(h+1)
-     * - Cost of heapifying node at height h: O(h)
-     * - Total cost = Σ(h=0 to log n) [n / 2^(h+1)] * h = O(n)
-     *
-     * @param arr the array to heapify
-     * @param n the size of the heap
+     * @param arr array to heapify
+     * @param n heap size
      */
     private void buildMaxHeap(int[] arr, int n) {
-        // Start from the last non-leaf node and move up
-        // Last non-leaf node index = (n / 2) - 1
         for (int i = (n / 2) - 1; i >= 0; i--) {
             heapifyDown(arr, n, i);
         }
     }
 
     /**
-     * Maintain max-heap property by moving element down the tree.
+     * Maintain max-heap property by moving element down.
      * Uses iterative approach to avoid recursion overhead.
      *
-     * INVARIANT: At each step, the subtrees rooted at left and right children
-     * are valid max-heaps, but the element at index i might violate the heap property.
+     * TIME: O(log n)
+     * SPACE: O(1)
      *
-     * @param arr the array representing the heap
-     * @param heapSize the current size of the heap
-     * @param i the index of the element to heapify
+     * @param arr heap array
+     * @param heapSize current heap size
+     * @param i index to heapify from
      */
     private void heapifyDown(int[] arr, int heapSize, int i) {
         if (enableTracking) {
             tracker.recordHeapify();
         }
 
-        // Use iterative approach instead of recursion for better performance
         int current = i;
 
         while (true) {
             int largest = current;
-            int left = 2 * current + 1;   // Left child index
-            int right = 2 * current + 2;  // Right child index
+            int left = 2 * current + 1;
+            int right = 2 * current + 2;
 
-            // Check if left child exists and is greater than current largest
             if (left < heapSize) {
                 if (enableTracking) {
                     tracker.recordComparison();
-                    tracker.recordArrayRead(); // Reading arr[left]
-                    tracker.recordArrayRead(); // Reading arr[largest]
+                    tracker.recordArrayRead();
+                    tracker.recordArrayRead();
                 }
                 if (arr[left] > arr[largest]) {
                     largest = left;
                 }
             }
 
-            // Check if right child exists and is greater than current largest
             if (right < heapSize) {
                 if (enableTracking) {
                     tracker.recordComparison();
-                    tracker.recordArrayRead(); // Reading arr[right]
-                    tracker.recordArrayRead(); // Reading arr[largest]
+                    tracker.recordArrayRead();
+                    tracker.recordArrayRead();
                 }
                 if (arr[right] > arr[largest]) {
                     largest = right;
                 }
             }
 
-            // If largest is not the current node, swap and continue
             if (largest != current) {
                 swap(arr, current, largest);
-                current = largest; // Move down to the swapped position
+                current = largest;
             } else {
-                break; // Heap property is satisfied
+                break;
             }
         }
     }
 
     /**
-     * Swap two elements in the array.
+     * Move element up to maintain max-heap property.
+     * Used for increase-key operation.
      *
-     * @param arr the array
-     * @param i index of first element
-     * @param j index of second element
+     * TIME: O(log n)
+     * SPACE: O(1)
+     *
+     * @param arr heap array
+     * @param i index to heapify from
      */
+    private void heapifyUp(int[] arr, int i) {
+        if (enableTracking) {
+            tracker.recordHeapify();
+        }
+
+        while (i > 0) {
+            int parent = (i - 1) / 2;
+
+            if (enableTracking) {
+                tracker.recordComparison();
+                tracker.recordArrayRead();
+                tracker.recordArrayRead();
+            }
+
+            if (arr[i] > arr[parent]) {
+                swap(arr, i, parent);
+                i = parent;
+            } else {
+                break;
+            }
+        }
+    }
+
+    /**
+     * Extract maximum element from max-heap.
+     *
+     * TIME: O(log n)
+     *
+     * @param arr heap array
+     * @param heapSize current heap size
+     * @return maximum element
+     * @throws IllegalArgumentException if heap is empty
+     */
+    public int extractMax(int[] arr, int heapSize) {
+        if (heapSize <= 0) {
+            throw new IllegalArgumentException("Heap is empty");
+        }
+
+        int max = arr[0];
+        arr[0] = arr[heapSize - 1];
+        heapifyDown(arr, heapSize - 1, 0);
+
+        return max;
+    }
+
+    /**
+     * Increase value of element at index i to newValue.
+     *
+     * TIME: O(log n)
+     *
+     * @param arr heap array
+     * @param i index of element
+     * @param newValue new value (must be >= current value)
+     * @throws IllegalArgumentException if newValue < current value
+     */
+    public void increaseKey(int[] arr, int i, int newValue) {
+        if (newValue < arr[i]) {
+            throw new IllegalArgumentException("New value must be >= current value");
+        }
+
+        arr[i] = newValue;
+        heapifyUp(arr, i);
+    }
+
+    /**
+     * Insert new element into max-heap.
+     *
+     * TIME: O(log n)
+     *
+     * @param arr heap array (must have space for new element)
+     * @param heapSize current heap size
+     * @param value value to insert
+     * @return new heap size
+     */
+    public int insert(int[] arr, int heapSize, int value) {
+        if (heapSize >= arr.length) {
+            throw new IllegalArgumentException("Heap is full");
+        }
+
+        arr[heapSize] = Integer.MIN_VALUE;
+        increaseKey(arr, heapSize, value);
+
+        return heapSize + 1;
+    }
+
+    /**
+     * Get maximum element without removing it.
+     *
+     * TIME: O(1)
+     *
+     * @param arr heap array
+     * @param heapSize current heap size
+     * @return maximum element
+     */
+    public int getMax(int[] arr, int heapSize) {
+        if (heapSize <= 0) {
+            throw new IllegalArgumentException("Heap is empty");
+        }
+        return arr[0];
+    }
+
     private void swap(int[] arr, int i, int j) {
         if (enableTracking) {
             tracker.recordSwap();
@@ -175,13 +252,6 @@ public class HeapSort {
         arr[j] = temp;
     }
 
-    /**
-     * Verify if an array is sorted in ascending order.
-     * Useful for testing and validation.
-     *
-     * @param arr the array to check
-     * @return true if sorted, false otherwise
-     */
     public static boolean isSorted(int[] arr) {
         if (arr == null || arr.length <= 1) {
             return true;
@@ -195,12 +265,21 @@ public class HeapSort {
         return true;
     }
 
-    /**
-     * Create a copy of an array.
-     *
-     * @param arr the array to copy
-     * @return a new array with the same elements
-     */
+    public static boolean isMaxHeap(int[] arr, int heapSize) {
+        for (int i = 0; i < heapSize; i++) {
+            int left = 2 * i + 1;
+            int right = 2 * i + 2;
+
+            if (left < heapSize && arr[i] < arr[left]) {
+                return false;
+            }
+            if (right < heapSize && arr[i] < arr[right]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public static int[] copyArray(int[] arr) {
         if (arr == null) {
             return null;

@@ -4,14 +4,9 @@ import algorithms.HeapSort;
 import metrics.PerformanceTracker;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Random;
 import java.util.Scanner;
 
-/**
- * Command-line interface for running heap sort benchmarks.
- * Supports various input sizes and data distributions for empirical analysis.
- */
 public class BenchmarkRunner {
 
     private static final int[] DEFAULT_SIZES = {100, 500, 1000, 5000, 10000, 50000, 100000};
@@ -40,6 +35,7 @@ public class BenchmarkRunner {
                 case 5 -> runComplexityVerification();
                 case 6 -> {
                     System.out.println("Exiting benchmark suite. Goodbye!");
+                    scanner.close();
                     return;
                 }
                 default -> System.out.println("Invalid choice. Please try again.\n");
@@ -58,9 +54,6 @@ public class BenchmarkRunner {
         System.out.println("└──────────────────────────────────────────────────┘");
     }
 
-    /**
-     * Run quick benchmark with default sizes
-     */
     private static void runQuickBenchmark() {
         System.out.println("=== QUICK BENCHMARK ===\n");
 
@@ -83,9 +76,6 @@ public class BenchmarkRunner {
         System.out.println();
     }
 
-    /**
-     * Run comprehensive benchmark with multiple runs and CSV export
-     */
     private static void runComprehensiveBenchmark() {
         System.out.println("=== COMPREHENSIVE BENCHMARK ===");
         System.out.println("Running " + MEASUREMENT_RUNS + " trials per size with " +
@@ -96,14 +86,12 @@ public class BenchmarkRunner {
         for (int size : DEFAULT_SIZES) {
             System.out.println("Testing size n = " + size + "...");
 
-            // Warmup runs
             for (int w = 0; w < WARMUP_RUNS; w++) {
                 int[] arr = generateRandomArray(size);
                 HeapSort sorter = new HeapSort();
                 sorter.sort(arr);
             }
 
-            // Measurement runs
             for (int run = 0; run < MEASUREMENT_RUNS; run++) {
                 int[] arr = generateRandomArray(size);
                 HeapSort sorter = new HeapSort(tracker);
@@ -119,7 +107,6 @@ public class BenchmarkRunner {
             System.out.println();
         }
 
-        // Export to CSV
         try {
             String filename = "heap_sort_benchmark_" + System.currentTimeMillis() + ".csv";
             tracker.exportToCSV(filename);
@@ -131,9 +118,6 @@ public class BenchmarkRunner {
         tracker.printRunHistory();
     }
 
-    /**
-     * Run custom benchmark with user-specified size
-     */
     private static void runCustomBenchmark(Scanner scanner) {
         System.out.print("Enter array size: ");
         int size = scanner.nextInt();
@@ -160,9 +144,6 @@ public class BenchmarkRunner {
         }
     }
 
-    /**
-     * Analyze performance across different input distributions
-     */
     private static void runInputDistributionAnalysis() {
         System.out.println("=== INPUT DISTRIBUTION ANALYSIS ===\n");
 
@@ -190,16 +171,12 @@ public class BenchmarkRunner {
         System.out.println("\n✓ All distributions tested successfully.\n");
     }
 
-    /**
-     * Verify O(n log n) complexity empirically
-     */
     private static void runComplexityVerification() {
         System.out.println("=== COMPLEXITY VERIFICATION ===");
         System.out.println("Verifying Θ(n log n) time complexity...\n");
 
         int[] sizes = {1000, 2000, 4000, 8000, 16000, 32000};
         double[] times = new double[sizes.length];
-        double[] ratios = new double[sizes.length - 1];
 
         PerformanceTracker tracker = new PerformanceTracker();
 
@@ -220,12 +197,12 @@ public class BenchmarkRunner {
             double normalizedTime = times[i] / (size * Math.log(size) / Math.log(2));
 
             if (i > 0) {
-                ratios[i - 1] = times[i] / times[i - 1];
+                double ratio = times[i] / times[i - 1];
                 double expectedRatio = (double) sizes[i] * Math.log(sizes[i]) /
                         (sizes[i - 1] * Math.log(sizes[i - 1]));
 
                 System.out.printf("%-11d | %10.3f | %12.6f | %.3f (expected: %.3f)%n",
-                        size, times[i], normalizedTime, ratios[i - 1], expectedRatio);
+                        size, times[i], normalizedTime, ratio, expectedRatio);
             } else {
                 System.out.printf("%-11d | %10.3f | %12.6f | --%n",
                         size, times[i], normalizedTime);
@@ -236,11 +213,6 @@ public class BenchmarkRunner {
         System.out.println("  Time/n log n values should remain relatively constant for Θ(n log n) complexity.\n");
     }
 
-    // === UTILITY METHODS ===
-
-    /**
-     * Generate random array of specified size
-     */
     private static int[] generateRandomArray(int size) {
         Random rand = new Random();
         int[] arr = new int[size];
@@ -250,9 +222,6 @@ public class BenchmarkRunner {
         return arr;
     }
 
-    /**
-     * Generate array with specific distribution
-     */
     private static int[] generateArrayByDistribution(int size, String distribution) {
         Random rand = new Random();
         int[] arr = new int[size];
@@ -277,7 +246,6 @@ public class BenchmarkRunner {
                 for (int i = 0; i < size; i++) {
                     arr[i] = i;
                 }
-                // Swap 5% of elements
                 for (int i = 0; i < size / 20; i++) {
                     int idx1 = rand.nextInt(size);
                     int idx2 = rand.nextInt(size);
@@ -288,7 +256,7 @@ public class BenchmarkRunner {
             }
             case "Many Duplicates" -> {
                 for (int i = 0; i < size; i++) {
-                    arr[i] = rand.nextInt(10); // Only 10 unique values
+                    arr[i] = rand.nextInt(10);
                 }
             }
         }
