@@ -39,11 +39,3 @@ build/
 .DS_Store
 
 
-*.class
-*.jar
-*.war
-*.ear
-.idea/
-*.log
-*.csv
-!docs/performance-plots/*.csv
