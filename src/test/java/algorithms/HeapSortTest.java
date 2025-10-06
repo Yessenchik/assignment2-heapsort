@@ -48,7 +48,6 @@ class HeapSortTest {
         assertArrayEquals(new int[]{42}, arr);
         assertTrue(HeapSort.isSorted(arr));
     }
-
     @Test
     @DisplayName("Test two elements ascending")
     void testTwoElementsAscending() {
@@ -56,7 +55,6 @@ class HeapSortTest {
         sorter.sort(arr);
         assertArrayEquals(new int[]{1, 2}, arr);
     }
-
     @Test
     @DisplayName("Test two elements descending")
     void testTwoElementsDescending() {
