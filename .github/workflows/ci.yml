@@ -1,0 +1,48 @@
+name: CI (Java + Maven)
+
+on:
+  push:
+    branches:
+      - master
+      - "feature/*"
+  pull_request:
+    branches:
+      - master
+      - "feature/*"
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        java: [ '17' ]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK ${{ matrix.java }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: 'maven'   # enables dependency caching
+
+      - name: Build & test
+        run: mvn -B -q -e -DskipTests=false test
+
+      - name: Package (optional)
+        if: ${{ success() }}
+        run: mvn -B -q -DskipTests package
+
+      - name: Upload test reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: surefire-reports-java-${{ matrix.java }}
+          path: |
+            **/target/surefire-reports/**
+            **/target/failsafe-reports/**
+          if-no-files-found: ignore
