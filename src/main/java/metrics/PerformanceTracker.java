@@ -200,7 +200,7 @@ public class PerformanceTracker {
      * Print current metrics to console
      */
     public void printMetrics() {
-        System.out.println("=== Performance Metrics ===");
+        System.out.println("Performance Metrics");
         System.out.println("Comparisons:      " + comparisons);
         System.out.println("Swaps:            " + swaps);
         System.out.println("Array Reads:      " + arrayReads);
@@ -208,7 +208,7 @@ public class PerformanceTracker {
         System.out.println("Heapify Ops:      " + heapifyOperations);
         System.out.printf("Execution Time:   %.3f ms%n", getExecutionTimeMillis());
         System.out.printf("Memory Used:      %d KB%n", peakMemoryUsage / 1024);
-        System.out.println("=========================");
+        System.out.println("=");
     }
 
     /**
@@ -219,7 +219,7 @@ public class PerformanceTracker {
         for (int i = 0; i < runHistory.size(); i++) {
             System.out.printf("Run %d: %s%n", i + 1, runHistory.get(i));
         }
-        System.out.println("==================\n");
+        System.out.println("=\n");
     }
 
     // Getters
