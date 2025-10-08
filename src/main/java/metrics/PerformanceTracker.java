@@ -195,10 +195,6 @@ public class PerformanceTracker {
             }
         }
     }
-
-    /**
-     * Print current metrics to console
-     */
     public void printMetrics() {
         System.out.println("Performance Metrics");
         System.out.println("Comparisons:      " + comparisons);
