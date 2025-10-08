@@ -1,11 +1,11 @@
-# Heap Sort Implementation - Assignment 2
+<file name=0 path=README.md># Heap Sort Implementation - Assignment 2
 
 **Student B, Pair 2: Advanced Sorting Algorithms**  
 **Algorithm**: Heap Sort with In-Place Implementation and Bottom-Up Heapify Optimization
 
 ---
 
-## 📋 Algorithm Overview
+## Algorithm Overview
 
 **Heap Sort** is a comparison-based sorting algorithm that leverages the heap data structure. It operates in two main phases:
 
@@ -13,14 +13,14 @@
 2. **Extract Maximum**: Repeatedly extract the maximum element and restore the heap property
 
 ### Key Features
-- ✅ **In-place sorting**: O(1) auxiliary space
-- ✅ **Bottom-up heapify**: Optimized O(n) heap construction
-- ✅ **Predictable performance**: Θ(n log n) for all cases
-- ✅ **No recursion overhead**: Iterative heapify implementation
+- In-place sorting: O(1) auxiliary space
+- Bottom-up heapify: Optimized O(n) heap construction
+- Predictable performance: Θ(n log n) for all cases
+- No recursion overhead: Iterative heapify implementation
 
 ---
 
-## 🧮 Complexity Analysis
+## Complexity Analysis
 
 ### Time Complexity
 
@@ -41,7 +41,7 @@
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 - Java 17 or higher
@@ -73,16 +73,16 @@ A Java implementation of the **Heap Sort** algorithm with integrated performance
 
 ---
 
-## 📘 Features
+## Features
 
-- 🧩 **Heap Sort Implementation** — Efficient O(n log n) sorting algorithm
-- ⏱️ **Performance Metrics** — Track comparisons, swaps, execution time, and memory usage
-- 🧪 **Reusable API** — Easily integrate into other Java projects
-- 🧹 **Clean Design** — Clear separation between algorithm and performance tracking
+- Heap Sort Implementation — Efficient O(n log n) sorting algorithm
+- Performance Metrics — Track comparisons, swaps, execution time, and memory usage
+- Reusable API — Easily integrate into other Java projects
+- Clean Design — Clear separation between algorithm and performance tracking
 
 ---
 
-## 🚀 Programmatic Usage
+## Programmatic Usage
 
 ```java
 import algorithms.HeapSort;
