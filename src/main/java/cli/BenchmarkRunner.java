@@ -14,10 +14,8 @@ public class BenchmarkRunner {
     private static final int MEASUREMENT_RUNS = 5;
 
     public static void main(String[] args) {
-        System.out.println("╔════════════════════════════════════════════════╗");
-        System.out.println("║     HEAP SORT PERFORMANCE BENCHMARK SUITE      ║");
-        System.out.println("║     Bottom-Up Heapify | In-Place Sorting       ║");
-        System.out.println("╚════════════════════════════════════════════════╝\n");
+        System.out.println("=== HEAP SORT PERFORMANCE BENCHMARK SUITE ===");
+        System.out.println("Bottom-Up Heapify | In-Place Sorting\n");
 
         Scanner scanner = new Scanner(System.in);
 
@@ -44,14 +42,13 @@ public class BenchmarkRunner {
     }
 
     private static void printMenu() {
-        System.out.println("┌─ BENCHMARK OPTIONS ─────────────────────────────┐");
-        System.out.println("│ 1. Quick Benchmark (default sizes)              │");
-        System.out.println("│ 2. Comprehensive Benchmark (with CSV export)    │");
-        System.out.println("│ 3. Custom Benchmark (specify size)              │");
-        System.out.println("│ 4. Input Distribution Analysis                  │");
-        System.out.println("│ 5. Complexity Verification (n log n)            │");
-        System.out.println("│ 6. Exit                                          │");
-        System.out.println("└──────────────────────────────────────────────────┘");
+        System.out.println("Benchmark Options:");
+        System.out.println("1. Quick Benchmark (default sizes)");
+        System.out.println("2. Comprehensive Benchmark (with CSV export)");
+        System.out.println("3. Custom Benchmark (specify size)");
+        System.out.println("4. Input Distribution Analysis");
+        System.out.println("5. Complexity Verification (n log n)");
+        System.out.println("6. Exit");
     }
 
     private static void runQuickBenchmark() {
